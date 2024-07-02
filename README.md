@@ -1,6 +1,9 @@
 # DeepTEC
 **Previous name, SCITE:** Searching for the Single-cell-based Critical Interactions between Tumor cells and TECs
 
+### Overview
+DeepTEC is a tool designed to identify critical interactions in the tumor microenvironment using single-cell RNA sequencing data.
+
 ## Requirements
 
 - **Python (>= 3.8.19):** [Download Python](https://www.python.org/downloads/source/)
