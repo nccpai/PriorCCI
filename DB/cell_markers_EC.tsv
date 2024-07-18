@@ -1,0 +1,7 @@
+tissue	cell_type_major	cell_type_minor	cell_type_subset	exp	markers
+Endothelium	Endothelial cell	NEC	capillary_I	pos	"HPGD,IL1RL1,EDNRB,CA4,ADIRF,S100A6,ITM2B,CLDN5,SOSTDC1,HLA-E"
+Endothelium	Endothelial cell	NEC	capillary_II	pos	"FCN3,SLC6A4,TMEM100,IL7R,BTNL9,TNFSF10,VIPR1,CD14,NOSTRIN,HIF3A"
+Endothelium	Endothelial cell	NEC	activated_capillary	pos	"EDN1,GPIHBP1,MT1M,EPAS1,JUN,ZFP36,GADD45B,FOSB,FOS,EGR1"
+Endothelium	Endothelial cell	TEC	Tip_Cells	pos	"COL4A1,ESM1,SPARC,ANGPT2,COL4A2,INSR,CALM1,MARCKSL1,RGS3,MCAM"
+Endothelium	Endothelial cell	TEC	Immature_Phenotype	pos	"PLVAP,DDIT4,HSPG2,VWA1,SLC9A3R2,RBP7,SOX18,SPRY1,A2M,ID3"
+Endothelium	Endothelial cell	TEC	Activated_EC	pos	"CCL14,POSTN,PRCP,ACTN1,IGFBP7,TIMP1"
