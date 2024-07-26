@@ -6,7 +6,7 @@ DeepTEC is a tool designed to identify critical interactions in the tumor microe
 
 ## Requirements
 
-- **Python (>= 3.8.19):** [Download Python](https://www.python.org/downloads/source/)
+- **Python (>= 3.8.19):**
 - **pip3 (>= 24.0)**
 - **numpy (>= 1.19.5)**
 - **matplotlib (>= 3.3.4)**
