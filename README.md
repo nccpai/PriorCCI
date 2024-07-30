@@ -1,5 +1,5 @@
 # PriorCCI
-**Prioritization of the Critical Cell Interactions
+Prioritization of the Critical Cell Interactions
 **Previous name, SCITE:** Searching for the Single-cell-based Critical Interactions between Tumor cells and TECs
 
 ### Overview
