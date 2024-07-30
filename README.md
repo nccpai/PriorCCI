@@ -1,9 +1,9 @@
 # PriorCCI
 Prioritization of the Critical Cell Interactions
-**Previous name, SCITE:** Searching for the Single-cell-based Critical Interactions between Tumor cells and TECs
+Previous name, SCITE: Searching for the Single-cell-based Critical Interactions between Tumor cells and TECs
 
 ### Overview
-DeepTEC is a tool designed to identify critical interactions in the tumor microenvironment using single-cell RNA sequencing data.
+PriorCCI is a tool designed to search the critical interactions in the tumor microenvironment using single-cell RNA-seq data.
 
 ## Requirements
 
