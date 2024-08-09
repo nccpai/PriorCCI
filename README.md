@@ -1,11 +1,10 @@
 # PriorCCI
-Prioritization of the Critical Cell Interactions
+Prioritization of the specific Cell-to-Cell Interactions.
 
 ## Overview
-PriorCCI is a tool designed to search the critical interactions specific to a certain cell type with tumor cells in the tumor microenvironment using single-cell RNA-seq data.
+PriorCCI is a tool designed to search the critical receptor-ligand pairs specific to the interaction between a certain cell type and tumor cells in tumor microenvironment using CNN and GradCAM++ with the single-cell RNA-seq data.
 
 ## Requirements
-
 - **Python (>= 3.8.19)**
 - **pip3 (>= 24.0)**
 - **numpy (>= 1.19.5)**
