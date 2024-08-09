@@ -1,7 +1,5 @@
 # PriorCCI
 Prioritization of the Critical Cell Interactions
-
-### Overview
 PriorCCI is a tool designed to search the critical interactions specific to a certain cell type with tumor cells in the tumor microenvironment using single-cell RNA-seq data.
 
 ## Requirements
