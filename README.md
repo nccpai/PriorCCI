@@ -1,8 +1,8 @@
-# PriorCCI
+# PriCCI
 Prioritization of the specific Cell-to-Cell Interactions.
 
 ## Overview
-PriorCCI is a tool designed to search the critical receptor-ligand pairs specific to the interaction between a certain cell type and tumor cells in tumor microenvironment using CNN and GradCAM++ with the single-cell RNA-seq data.
+PriCCI is a tool designed to search the critical receptor-ligand pairs specific to the interaction between a certain cell type and tumor cells in tumor microenvironment using CNN and GradCAM++ with the single-cell RNA-seq data.
 
 ## Requirements
 - **Python (>= 3.8.19)**
