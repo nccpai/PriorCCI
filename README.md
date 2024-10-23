@@ -1,4 +1,4 @@
-# PriCCI
+# PriorCCI
 Prioritization of the specific Cell-to-Cell Interactions.
 
 ## Overview
