@@ -129,12 +129,12 @@ Installed via `requirements_python311.txt`. Key packages:
 If you use this repository, please cite:
 
 > **Kim H., et al.**  
-> _제목_  
+> not yet published  
 > (In submission to ---, 2025)
 
 ---
 
 ## 🧑‍💻 Contact
 
-- **Maintainer**: Hanbyeol Kim (googija92@ncc.re.kr)  
-- **Institution**: NCC Bioinformatics Research Division
+- **Maintainer**: Hanbyeol Kim (googija92@ncc.re.kr) and Joonha Kwon (joon2k@ncc.re.kr)
+- **Institution**: Bioinformatics Branch, Division of Cancer Data Science, Research Institute, National Cancer Center
