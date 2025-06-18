@@ -11,13 +11,13 @@ We recommend using a Python 3.11 environment with TensorFlow 2.17.
 
 ### 1. Create a conda environment
 ```bash
-conda create -n priorcci311 python=3.11 -y
-conda activate priorcci311
+conda create -n priorcci python=3.11 -y
+conda activate priorcci
 ```
 
 ### 2. Install required packages
 ```bash
-pip install -r requirements_python311.txt
+pip install -r requirements_python.txt
 ```
 ---
 
