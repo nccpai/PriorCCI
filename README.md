@@ -1,17 +1,17 @@
 # PriorCCI
-Prioritization of the specific Cell-to-Cell Interactions.
 
-## Overview
-PriorCCI is a tool designed to search the critical receptor-ligand pairs specific to the interaction between a certain cell type and tumor cells in tumor microenvironment using CNN and GradCAM++ with the single-cell RNA-seq data.
+**Prioritization of tumor-specific cell-cell interactions from single-cell RNA-seq data using deep learning.**  
+This repository provides the full pipeline of the PriorCCI framework, from preprocessing to CNN-based classification and GradCAM++-based interpretability.
 
-## Requirements
-- **Python (>= 3.8.19)**
-- **pip3 (>= 24.0)**
-- **numpy (>= 1.19.5)**
-- **matplotlib (>= 3.3.4)**
-- **pandas (>= 1.1.5)**
-- **scikit-learn (>= 0.24.2)**
-- **keras (>= 2.6.0)**
-- **tensorflow (>= 2.6.0)**
-- **tf-keras-vis (>= 0.8.7)**
-- **scanpy (>= 1.10.1)**
+---
+
+## 🔧 Installation
+
+We recommend using a Python 3.11 environment with TensorFlow 2.17.
+
+### 1. Create a conda environment
+```bash
+conda create -n priorcci python=3.11 -y
+conda activate priorcci
+
+pip install -r requirements_python.txt
