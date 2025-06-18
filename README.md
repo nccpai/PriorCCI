@@ -153,7 +153,7 @@ Installed via `requirements_python311.txt`. Key packages:
 
 ---
 
-## 📌 Citation
+## Citation
 
 If you use this repository, please cite:
 
@@ -163,7 +163,7 @@ If you use this repository, please cite:
 
 ---
 
-## 🧑‍💻 Contact
+## Contact
 
 - **Maintainer**: Hanbyeol Kim (googija92@ncc.re.kr) and Joonha Kwon (joon2k@ncc.re.kr)
 - **Institution**: Bioinformatics Branch, Division of Cancer Data Science, Research Institute, National Cancer Center
