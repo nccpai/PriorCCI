@@ -1,6 +1,6 @@
 # PriorCCI
 
-**Prioritization of ligand-receptor pairs for the specific cell-cell interaction from single-cell RNA-seq data using deep learning.**  
+**Prioritization of the ligand-receptor pairs for the specific cell-cell interaction from single-cell RNA-seq data using deep learning.**  
 This repository provides the full pipeline of the PriorCCI framework, including preprocessing, CNN-based classification, and GradCAM++-based interpretability.
 
 ---
