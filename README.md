@@ -5,7 +5,7 @@ This repository provides the full pipeline of the PriorCCI framework, including 
 
 ---
 
-## 🔧 Installation
+## Installation
 
 We recommend using a Python 3.11 environment with TensorFlow 2.17.
 
@@ -19,100 +19,129 @@ conda activate priorcci311
 ```bash
 pip install -r requirements_python311.txt
 ```
-
 ---
 
-## 📁 Project structure
+## Usage
 
-```
-PriorCCI/
-├── DB/                        # Input .h5ad and ligand-receptor CSVs
-├── cnn_input_data/           # Preprocessed input files (.txt, .npz)
-├── cnn_model/                # Trained CNN models (.h5)
-├── gcam_res/                 # GradCAM++ results per class and model
-├── CCI_res/                  # Aggregated GradCAM++ statistics
-├── scripts/                  # Python functions and pipelines
-│   ├── preprocess.py
-│   ├── train.py
-│   ├── gradcam.py
-│   └── merge_gradcam.py
-├── requirements_python311.txt
-└── README.md
-```
-
----
-
-## 🧬 Usage
-
-### Step 1: Preprocess input data
+### 1: Preprocess input data
 
 ```python
-from scripts.preprocess import input_data_preprocess
+# Import required modules
 import scanpy as sc
+from priorcci_preprocess import input_data_preprocess
+from cnn_module import (
+    load_data,
+    train_and_save_model,
+    evaluate_saved_models,
+    f1_m,
+    precision_m,
+    recall_m,
+    visualize_final_model_results
+)
 
-adata = sc.read('DB/CCA_Lung_gs_notip.h5ad')
-input_data_preprocess(adata, celltype_col='cell_type_major')
+# Step 1: Preprocess input data for CNN
+# - Loads toy data
+# - Filters low-expression genes
+# - Normalizes data
+# - Generates paired samples and saves to .npz format
+
+adata = sc.read('DB/CCA_Lung_toy.h5ad')
+
+input_data_preprocess(
+    adata,
+    celltype_col='cell_type_major',
+    output_folder='cnn_input_data',
+    n_repeat=1000
+)
+
 ```
 
 Generates `.txt` and `.npz` input files under `cnn_input_data/`.
 
 ---
 
-### Step 2: Train CNN models
+### 2: Train CNN models
 
 ```python
-from scripts.train import train_and_save_model, load_data
+# Step 2: Load .npz samples and prepare training labels
 
 data, labels, num_classes, num_lrpair = load_data(path='cnn_input_data/')
-train_and_save_model(data, labels, num_classes, num_lrpair, base_save_path='cnn_model/')
+
+# Step 3: Train and save CNN models (repeats 10 times)
+
+train_and_save_model(data, labels, num_classes, num_lrpair)
+
+# Step 4: Evaluate all trained models on test set
+
+evaluate_saved_models(data, labels, num_classes)
+
+# Step 5: Visualize final model (v10) results
+# - Confusion matrix
+# - ROC-AUC curve
+
+model_path = 'cnn_model/data_cnn-model_v010.h5'
+model = load_model(model_path, custom_objects={
+    'f1_m': f1_m,
+    'precision_m': precision_m,
+    'recall_m': recall_m
+})
+
+_, test_data, _, test_labels = train_test_split(data, labels, test_size=0.2, random_state=51)
+
+visualize_final_model_results(model, test_data, test_labels)
+
 ```
 
 Trains and saves 10 CNN models with different splits.
 
 ---
 
-### Step 3: Run GradCAM++ per model and class
+### 3: Run GradCAM++ per model and class
 
 ```python
-from scripts.gradcam import run_gradcam_analysis
-from scripts.train import load_data
+# Step 6: Run GradCAM++ analysis to extract gene pair importance
 
-# Load input data and .npz file list
-data, _, _, _ = load_data()
-from os import listdir
-class_files = sorted([f for f in listdir('cnn_input_data/') if f.endswith('.npz')])
+# class_files must match sorted .npz input files
+import os
+import re
 
-run_gradcam_analysis(data=data,
-                     gene_list_csv='DB/filtered_CCIdb.csv',
-                     model_dir='cnn_model/',
-                     save_dir='gcam_res/',
-                     class_files=class_files)
+def extract_number(filename):
+    return int(re.search(r'\d+', filename).group())
+
+class_files = sorted([f for f in os.listdir('cnn_input_data/') if f.endswith('.npz')], key=extract_number)
+
+custom_objs = {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m}
+
+run_gradcam_analysis(
+    data=data,
+    gene_list_csv='DB/filtered_CCIdb.csv',
+    model_dir='cnn_model/',
+    save_dir='gcam_res/',
+    class_files=class_files,
+    custom_objects=custom_objs
+)
 ```
 
 Generates per-class importance scores for each trained model.
 
 ---
 
-### Step 4: Merge GradCAM++ results
+### 4: Merge GradCAM++ results
 
 ```python
-from scripts.merge_gradcam import merge_gradcam_results
+# Step 7: Merge GradCAM++ results and compute statistics for each cell class
 
-merge_gradcam_results(path='gcam_res/', save_path='CCI_res/')
+merge_gradcam_results(
+    path='gcam_res/',
+    save_path='CCI_res/'
+)
 ```
 
 Outputs `.csv` files summarizing mean, std, and frequency of top L-R pairs.
 
 ---
 
-## 📊 Output example
-
-- `gcam_res/gcamplus_result_Tip_Cells_v05.txt`: GradCAM++ weights per gene pair for Tip Cells in model v5
-- `CCI_res/gcam_Tip_Cells_res.csv`: Aggregated results across models for Tip Cells
-
----
-
-## 📦 Key dependencies
+## Key dependencies
 
 Installed via `requirements_python311.txt`. Key packages:
 
