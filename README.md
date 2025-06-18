@@ -129,12 +129,12 @@ Installed via `requirements_python311.txt`. Key packages:
 If you use this repository, please cite:
 
 > **Kim H., et al.**  
-> _PriorCCI: Deep learning-based prioritization of cell-cell interactions in tumor microenvironment._  
-> (In submission to IEEE Access, 2025)
+> _제목_  
+> (In submission to ---, 2025)
 
 ---
 
 ## 🧑‍💻 Contact
 
-- **Maintainer**: Hanbyeol Kim (googija92@gmail.com)  
+- **Maintainer**: Hanbyeol Kim (googija92@ncc.re.kr)  
 - **Institution**: NCC Bioinformatics Research Division
