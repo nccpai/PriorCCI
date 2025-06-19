@@ -24,7 +24,8 @@ pip install -r requirements_python.txt
 ```python
 import gdown
 
-gdown.download("https://drive.google.com/file/d/1p80kgvtsOD4YAcmSefo_xGwQQuRS9vUr/view?usp=drive_link", output='DB/CCA_Lung_toy.h5ad', quiet=False)
+url = "https://drive.google.com/file/d/1p80kgvtsOD4YAcmSefo_xGwQQuRS9vUr/view?usp=drive_link"
+gdown.download(url, output='DB/CCA_Lung_toy.h5ad', quiet=False, fuzzy=True)
 ```
 ---
 
