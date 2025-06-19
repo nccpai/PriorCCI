@@ -3,7 +3,7 @@ import os
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import callbacks
 import tensorflow as tf
-from utils import create_model, f1_m, precision_m, recall_m
+from .utils import create_model, f1_m, precision_m, recall_m
 
 def train_and_save_model(data, labels, num_classes, num_lrpair,
                          base_save_path='cnn_model/', n_repeat=10, batch_size=32, epochs=80):
