@@ -21,7 +21,9 @@ pip install -r requirements_python.txt
 ```
 
 ### 3. Toy data download
-```bash
+```python
+import gdown
+
 gdown.download("https://drive.google.com/file/d/1p80kgvtsOD4YAcmSefo_xGwQQuRS9vUr/view?usp=drive_link", output='DB/CCA_Lung_toy.h5ad', quiet=False)
 ```
 ---
