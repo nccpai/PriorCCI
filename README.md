@@ -121,7 +121,7 @@ Outputs `.csv` files summarizing mean, std, and frequency of top L-R pairs.
 
 ## Key dependencies
 
-Installed via `requirements_python311.txt`. Key packages:
+Installed via `requirements_python.txt`. Key packages:
 
 - `tensorflow==2.17.0`
 - `keras==3.5.0`
