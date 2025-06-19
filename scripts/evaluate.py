@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, precision_score, recall_score
-from utils import f1_m, precision_m, recall_m
+from .utils import f1_m, precision_m, recall_m
 
 def evaluate_saved_models(data, labels, num_classes, model_dir='cnn_model/', n_repeat=10):
     for i in range(1, n_repeat + 1):
