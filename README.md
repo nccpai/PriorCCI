@@ -31,91 +31,19 @@ gdown.download(url, output='DB/CCA_Lung_toy.h5ad', quiet=False, fuzzy=True)
 
 ## Usage
 
-### 1: Preprocess input data
+All steps are provided in the `PriorCCI_pipeline.ipynb` notebook, including:
 
-```python
-# Step 1: Preprocess input data for CNN
-adata = sc.read('DB/CCA_Lung_toy.h5ad')
-input_data_preprocess(
-    adata,
-    celltype_col='cell_type_major',
-    output_folder='cnn_input_data',
-    n_repeat=1000
-)
+1. Preprocessing input data (`input_data_preprocess`)
+2. Generating `.npz` input files
+3. CNN training and evaluation (10 repetitions)
+4. Model visualization using confusion matrix and ROC curves
+5. GradCAM++ analysis across models and classes
+6. Merging GradCAM++ results into final ranked ligand-receptor pairs
 
-```
+To run the full pipeline:
 
-Generates `.txt` and `.npz` input files under `cnn_input_data/`.
-
----
-
-### 2: Train CNN models
-
-```python
-# Step 2: Load .npz samples and prepare training labels
-data, labels, num_classes, num_lrpair = load_data(path='cnn_input_data/')
-
-# Step 3: Train and save CNN models
-train_and_save_model(data, labels, num_classes, num_lrpair)
-
-# Step 4: Evaluate all trained models
-evaluate_saved_models(data, labels, num_classes)
-
-# Step 5: Visualize final model (v10)
-model_path = 'cnn_model/data_cnn-model_v010.h5'
-model = load_model(model_path, custom_objects={
-    'f1_m': f1_m,
-    'precision_m': precision_m,
-    'recall_m': recall_m
-})
-
-_, test_data, _, test_labels = train_test_split(data, labels, test_size=0.2, random_state=51)
-visualize_final_model_results(model, test_data, test_labels)
-```
-
-Trains and saves 10 CNN models with different splits.
-
----
-
-### 3: Run GradCAM++ per model and class
-
-```python
-# Step 6: Run GradCAM++ analysis
-import os
-import re
-
-def extract_number(filename):
-    return int(re.search(r'\d+', filename).group())
-
-class_files = sorted([f for f in os.listdir('cnn_input_data/') if f.endswith('.npz')], key=extract_number)
-
-custom_objs = {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m}
-
-run_gradcam_analysis(
-    data=data,
-    gene_list_csv='DB/filtered_CCIdb.csv',
-    model_dir='cnn_model/',
-    save_dir='gcam_res/',
-    class_files=class_files,
-    custom_objects=custom_objs
-)
-```
-
-Generates per-class importance scores for each trained model.
-
----
-
-### 4: Merge GradCAM++ results
-
-```python
-# Step 7: Merge GradCAM++ results
-merge_gradcam_results(
-    path='gcam_res/',
-    save_path='CCI_res/'
-)
-```
-
-Outputs `.csv` files summarizing mean, std, and frequency of top L-R pairs.
+```bash
+jupyter notebook PriorCCI_pipeline.ipynb
 
 ---
 
