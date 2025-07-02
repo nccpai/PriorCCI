@@ -44,7 +44,7 @@ To run the full pipeline:
 
 ```bash
 jupyter notebook PriorCCI_pipeline.ipynb
-
+```
 ---
 
 ## Key dependencies
