@@ -39,21 +39,21 @@ def input_data_preprocess(adata, celltype_col,
                            n_sample2=100,
                            n_repeat=1000,
                            save_filtered_csv='DB/filtered_CCIdb.csv'):
-    print("📥 Step 1: Filtering genes with zero expression...")
+    print("Step 1: Filtering genes with zero expression...")
     X = adata.to_df()
     X_filtered = X.loc[:, (X.sum(axis=0) != 0)]
     adata_filtered = ad.AnnData(X_filtered)
     adata_filtered.obs = adata.obs.copy()
     adata_filtered.var = adata[:, X_filtered.columns].var.copy()
 
-    print("🧬 Step 2: QC and normalization...")
+    print("Step 2: QC and normalization...")
     adata_filtered.var["mt"] = adata_filtered.var_names.str.startswith("MT-")
     sc.pp.calculate_qc_metrics(adata_filtered, qc_vars=["mt"], percent_top=None, log1p=False, inplace=True)
     sc.pp.normalize_total(adata_filtered, target_sum=1e4)
     sc.pp.regress_out(adata_filtered, ["total_counts", "pct_counts_mt"])
     sc.pp.scale(adata_filtered, max_value=10)
 
-    print("📚 Step 3: Loading and filtering ligand-receptor gene list...")
+    print("Step 3: Loading and filtering ligand-receptor gene list...")
     gene_list_df = pd.read_csv(gene_csv, index_col=0)
     A_genes = gene_list_df['A'].str.split('+').explode().unique().tolist()
     adata_genes = adata_filtered.var.index.tolist()
@@ -65,9 +65,9 @@ def input_data_preprocess(adata, celltype_col,
             ~gene_list_df['B'].str.contains(g)
         ]
     gene_list_df.to_csv(save_filtered_csv)
-    print(f"✅ Filtered gene list saved to: {save_filtered_csv}")
+    print(f"Filtered gene list saved to: {save_filtered_csv}")
 
-    print("🧪 Step 4: Sampling cell pairs...")
+    print("Step 4: Sampling cell pairs...")
     os.makedirs(output_folder, exist_ok=True)
     ct_d = {ct: adata_filtered.obs.query(f"{celltype_col} == @ct").index.tolist()
             for ct in adata_filtered.obs[celltype_col].unique()}
@@ -84,9 +84,9 @@ def input_data_preprocess(adata, celltype_col,
                 random.shuffle(s1); random.shuffle(s2)
                 for a, b in zip(s1, s2):
                     f.write(f"{a},{b}\n")
-    print(f"📄 Sampling files saved to: {output_folder}/combi-*.txt")
+    print(f"Sampling files saved to: {output_folder}/combi-*.txt")
 
-    print("💾 Step 5: Generating npz files (this may take time)...")
+    print("Step 5: Generating npz files (this may take time)...")
 
     process_fn = partial(
         process_group,
@@ -99,9 +99,9 @@ def input_data_preprocess(adata, celltype_col,
     with mp.Pool(processes=max(1, len(cell_combinations) // 4)) as pool:
         pool.map(process_fn, range(len(cell_combinations)))
 
-    print("🎉 All .npz files generated successfully.")
+    print("All .npz files generated successfully.")
 
     sample_path = f'{output_folder}/combi-{cell_combinations[0][0]}_{cell_combinations[0][1]}_c0.npz'
     sample = np.load(sample_path)
-    print(f"📦 Sample file: {sample_path}")
+    print(f"Sample file: {sample_path}")
     print(f"Shape: {sample['arr_0'].shape}")
