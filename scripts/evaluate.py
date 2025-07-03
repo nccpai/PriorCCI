@@ -14,9 +14,9 @@ def evaluate_saved_models(data, labels, num_classes, model_dir='cnn_model/', n_r
 
         model_path = os.path.join(model_dir, f"data_cnn-model_v0{i}.h5")
         model = load_model(model_path, custom_objects={
-            'f1_m': f1_m,
-            'precision_m': precision_m,
-            'recall_m': recall_m
+            'f1_fn': f1_m(num_classes),
+            'precision_fn': precision_m(num_classes),
+            'recall_fn': recall_m(num_classes)
         })
 
         y_pred_probs = model.predict(test_data, batch_size=32, verbose=0)
@@ -26,6 +26,5 @@ def evaluate_saved_models(data, labels, num_classes, model_dir='cnn_model/', n_r
         f1 = f1_score(true_labels, pred_labels, average='weighted')
         recall = recall_score(true_labels, pred_labels, average='weighted')
         precision = precision_score(true_labels, pred_labels, average='weighted')
-        loss, accuracy, *_ = model.evaluate(test_data, true_labels, verbose=0)
 
-        print(f"Loss: {loss:.4f} | Accuracy: {accuracy:.4f} | F1: {f1:.4f} | Precision: {precision:.4f} | Recall: {recall:.4f}")
+        print(f"Accuracy: {(pred_labels == true_labels).mean():.4f} | F1: {f1:.4f} | Precision: {precision:.4f} | Recall: {recall:.4f}\n")
