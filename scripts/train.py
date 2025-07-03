@@ -17,8 +17,11 @@ def train_and_save_model(data, labels, num_classes, num_lrpair,
 
         model = create_model((100, num_lrpair, 2), num_classes)
         model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
-                      loss='sparse_categorical_crossentropy',
-                      metrics=['accuracy', f1_m, precision_m, recall_m])
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy',
+                       f1_m(num_classes),
+                       precision_m(num_classes),
+                       recall_m(num_classes)])
 
         lr_reduction = callbacks.ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5, min_lr=1e-6)
 
