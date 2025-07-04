@@ -3,80 +3,87 @@ import re
 import numpy as np
 import pandas as pd
 
-def merge_gradcam_results(path='gcam_res/', save_path='CCI_res/'):
-    """
-    Merge GradCAM++ results per class and compute statistical summaries of L-R gene pair importance.
-
-    Parameters
-    ----------
-    path : str
-        Directory containing GradCAM++ result .txt files.
-    save_path : str
-        Directory to save merged and summarized results.
-    """
+def merge_gradcam_results(path, save_path):
     os.makedirs(save_path, exist_ok=True)
 
-    # List of result files
-    file_list = sorted([f for f in os.listdir(path) if f.startswith("gcamplus_result_") and f.endswith(".txt")])
+    # Collect all files starting with 'gcamplus_result_'
+    result_files = sorted([
+        f for f in os.listdir(path)
+        if f.startswith("gcamplus_result_") and f.endswith(".txt")
+    ])
 
-    # Extract class names from filenames
-    class_names = list(set(
-        re.search(r'gcamplus_result_(.*)_v\d+\.txt', f).group(1)
-        for f in file_list if re.search(r'gcamplus_result_(.*)_v\d+\.txt', f)
-    ))
-    class_names.sort()
+    # Extract unique class names (e.g., B_TNK) from filenames
+    class_names = []
+    for filename in result_files:
+        match = re.search(r'gcamplus_result_(.*)_v\d+\.txt', filename)
+        if match:
+            class_names.append(match.group(1))
+        else:
+            print(f"[WARNING] Failed to extract class name from: {filename}")
+    class_names = sorted(list(set(class_names)))  # Remove duplicates
 
-    for cell in class_names:
-        cell_files = [f for f in file_list if f.startswith(f"gcamplus_result_{cell}_v")]
-        dfs = []
+    # Process each class (e.g., B_TNK) separately
+    for class_name in class_names:
+        class_files = [
+            f for f in result_files
+            if f.startswith(f"gcamplus_result_{class_name}_v") and f.endswith(".txt")
+        ]
 
-        for file in sorted(cell_files):
-            df = pd.read_csv(os.path.join(path, file), sep='\t')
+        class_dfs = []
 
-            # For duplicated (A, B) pairs, keep the one with the highest weight
-            df_unique = df.loc[df.groupby(['A', 'B'])['Normalized_Weight'].idxmax()]
-            df_unique = df_unique.sort_values(by='Normalized_Weight', ascending=False).reset_index(drop=True)
-            dfs.append(df_unique)
+        for filename in sorted(class_files):
+            df = pd.read_csv(os.path.join(path, filename), sep='\t')
+            geneA_col, geneB_col, weight_col = df.columns.tolist()
 
-        # Count occurrences of each gene pair
-        gene_pairs = [(row['A'], row['B']) for df in dfs for _, row in df.iterrows()]
-        pair_counts = pd.Series(gene_pairs).value_counts().reset_index()
-        pair_counts.columns = ['A_B_pair', 'Count']
-        pair_counts[['A', 'B']] = pd.DataFrame(pair_counts['A_B_pair'].tolist(), index=pair_counts.index)
-        pair_counts.drop(columns='A_B_pair', inplace=True)
+            # Keep only the entry with the maximum weight for each gene pair
+            df_unique = df.loc[
+                df.groupby([geneA_col, geneB_col])[weight_col].idxmax()
+            ]
+            df_unique = df_unique.sort_values(by=weight_col, ascending=False).reset_index(drop=True)
+            class_dfs.append(df_unique)
 
-        # Collect weights for each gene pair
-        gene_pair_weights = {}
-        for df in dfs:
+        # Count gene pair occurrences across all files
+        gene_pairs = []
+        for df in class_dfs:
             for _, row in df.iterrows():
-                pair = (row['A'], row['B'])
-                gene_pair_weights.setdefault(pair, []).append(row['Normalized_Weight'])
+                gene_pairs.append((row[geneA_col], row[geneB_col]))
 
-        # Compute statistical summaries
-        stats_results = []
-        for pair, weights in gene_pair_weights.items():
-            mean_w = np.mean(weights)
-            var_w = np.var(weights)
-            std_w = np.std(weights)
-            med_w = np.median(weights)
-            cv_w = (std_w / mean_w) * 100 if mean_w else 0
-            count = len(weights)
-            stats_results.append({
-                'A': pair[0],
-                'B': pair[1],
-                'Mean Normalized_Weight': mean_w,
-                'Variance Normalized_Weight': var_w,
-                'Std Dev Normalized_Weight': std_w,
-                'Median Normalized_Weight': med_w,
-                'CV Normalized_Weight': cv_w,
-                'Count': count
+        pair_df = pd.DataFrame(gene_pairs, columns=[geneA_col, geneB_col])
+        pair_df['Count'] = pair_df.groupby([geneA_col, geneB_col])[geneB_col].transform('count')
+        pair_df = pair_df.drop_duplicates().sort_values(by='Count', ascending=False).reset_index(drop=True)
+
+        # Aggregate weights by gene pair
+        gene_pair_weights = {}
+        for df in class_dfs:
+            for _, row in df.iterrows():
+                pair = (row[geneA_col], row[geneB_col])
+                gene_pair_weights.setdefault(pair, []).append(row[weight_col])
+
+        # Calculate summary statistics for each gene pair
+        stats = []
+        for (geneA, geneB), weights in gene_pair_weights.items():
+            weights = np.array(weights)
+            mean_val = np.mean(weights)
+            var_val = np.var(weights)
+            std_val = np.std(weights)
+            median_val = np.median(weights)
+            cv_val = std_val / mean_val * 100 if mean_val != 0 else 0
+            count_val = len(weights)
+
+            stats.append({
+                geneA_col: geneA,
+                geneB_col: geneB,
+                'Mean Normalized_Weight': mean_val,
+                'Variance Normalized_Weight': var_val,
+                'Std Dev Normalized_Weight': std_val,
+                'Median Normalized_Weight': median_val,
+                'CV Normalized_Weight': cv_val,
+                'Count': count_val
             })
 
-        stats_df = pd.DataFrame(stats_results)
-        stats_df = stats_df.sort_values(by='Count', ascending=False).reset_index(drop=True)
-
         # Save the result
-        stats_df.set_index('A', inplace=True)
-        out_file = os.path.join(save_path, f"gcam_{cell}_res.csv")
-        stats_df.to_csv(out_file)
-        print(f"✅ Saved: {out_file}")
+        stats_df = pd.DataFrame(stats)
+        stats_df = stats_df.sort_values(by='Count', ascending=False).reset_index(drop=True)
+        output_file = os.path.join(save_path, f"gcam_{class_name}_res.csv")
+        stats_df.to_csv(output_file, index=False)
+        print(f"✅ Saved: {output_file}")
