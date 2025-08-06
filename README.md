@@ -64,7 +64,7 @@ Installed via `requirements_python.txt`. Key packages:
 If you use this repository, please cite:
 
 Kim, Hanbyeol, et al.  
-"PriorCCI: Interpretable Deep Learning Framework for Identifying Key Ligand–Receptor Interactions Between Specific Cell Types from Single-Cell Transcriptomes." International Journal of Molecular Sciences (2025).  
+"PriorCCI: Interpretable Deep Learning Framework for Identifying Key Ligand–Receptor Interactions Between Specific Cell Types from Single-Cell Transcriptomes." *International Journal of Molecular Sciences (2025)*.  
 https://doi.org/10.3390/ijms26157110
 
 ---
