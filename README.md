@@ -63,9 +63,9 @@ Installed via `requirements_python.txt`. Key packages:
 
 If you use this repository, please cite:
 
-> **Kim H., et al.**  
-> not yet published  
-> (In submission to ---, 2025)
+Kim H., Choi E., Shim Y., and Kwon J.
+PriorCCI: Interpretable Deep Learning Framework for Identifying Key Ligand–Receptor Interactions Between Specific Cell Types from Single-Cell Transcriptomes.
+*International Journal of Molecular Sciences*, 26(15), 7110, 2025. https://doi.org/10.3390/ijms26157110
 
 ---
 
